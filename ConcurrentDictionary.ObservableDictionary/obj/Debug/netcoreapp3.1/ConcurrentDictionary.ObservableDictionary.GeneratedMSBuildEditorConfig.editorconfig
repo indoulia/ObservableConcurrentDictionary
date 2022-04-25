@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = ConcurrentDictionary.ObservableDictionary
+build_property.ProjectDir = D:\POC\OD\ObservableConcurrentDictionary\ConcurrentDictionary.ObservableDictionary\
