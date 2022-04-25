@@ -17,7 +17,7 @@ namespace ConcurrentDictionary.ObservableDictionary
         public ConcurrentObservableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
         public ConcurrentObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) : base(dictionary, comparer) { }
 
-        public delegate void TimeOutEventHandler(object myObject, TimeOutEventArgs<TKey, TValue> myArgs);
+        public delegate void TimeOutEventHandler(object myObject, TimeOutEventArgs myArgs);
         public event TimeOutEventHandler OnTimeOut;
         /// <summary>
         /// 
@@ -61,7 +61,7 @@ namespace ConcurrentDictionary.ObservableDictionary
                     {
                         if (cancellationTokenSource.IsCancellationRequested && base.ContainsKey(item.Key))
                         {
-                            var myArgs = new TimeOutEventArgs<TKey, TValue>(NotifyCollectionChangedAction.Add.ToString(), item);
+                            var myArgs = new TimeOutEventArgs(NotifyCollectionChangedAction.Add.ToString(), item);
                             OnTimeOut?.Invoke(this, myArgs);
                         }
                     }
@@ -76,16 +76,6 @@ namespace ConcurrentDictionary.ObservableDictionary
         {
             if (base.TryRemove(key, out TValue dicValue))
             {
-                //if (value.GetType().GetProperty("CancellationTokenSource") != null)
-                //{
-                //    PropertyInfo p = typeof(TValue).GetProperty("CancellationTokenSource");
-                //    if (p != null && p.PropertyType == typeof(CancellationTokenSource))
-                //    {
-                //        var cancellationTokenSource = (CancellationTokenSource)p.GetValue(value, null);
-                //        cancellationTokenSource.Cancel();
-                //    }
-                //}
-                //return true;
                 return CancelRunningTimerTask(dicValue, true);
             }
             else
@@ -97,16 +87,6 @@ namespace ConcurrentDictionary.ObservableDictionary
             if (base.TryGetValue(key, out TValue dicValue))
             {
                 return CancelRunningTimerTask(dicValue, false, timeOut);
-                //if (dicValue.GetType().GetProperty("CancellationTokenSource") != null)
-                //{
-                //    PropertyInfo p = typeof(TValue).GetProperty("CancellationTokenSource");
-                //    if (p != null && p.PropertyType == typeof(CancellationTokenSource))
-                //    {
-                //        var canellationToken = (CancellationTokenSource)p.GetValue(dicValue, null);
-                //        canellationToken.CancelAfter(timeOut);
-                //        return true;
-                //    }
-                //}
             }
             return false;
         }
@@ -150,57 +130,9 @@ namespace ConcurrentDictionary.ObservableDictionary
 
             if (cancellationTokenSource.IsCancellationRequested && base.ContainsKey(item.Key))
             {
-                var myArgs = new TimeOutEventArgs<TKey, TValue>(NotifyCollectionChangedAction.Add.ToString(), item);
+                var myArgs = new TimeOutEventArgs(NotifyCollectionChangedAction.Add.ToString(), item);
                 OnTimeOut?.Invoke(this, myArgs);
-            }
-
-            //var task = Task.Delay(2000, cancellationTokenSource.Token);
-            //task.Wait(cancellationTokenSource.Token);
-            //if (!task.IsCanceled)
-            //    StartTimer(item, cancellationTokenSource);
-
-            // task.Dispose();
-
-
-            //Timer timer = null;
-            //timer = new Timer(new TimerCallback(y =>
-            //    {
-            //        if (cancellationTokenSource.IsCancellationRequested)
-            //        {
-            //            if (base.ContainsKey(item.Key))
-            //            {
-            //                var myArgs = new TimeOutEventArgs<TKey, TValue>(NotifyCollectionChangedAction.Add.ToString(), item);
-            //                OnTimeOut?.Invoke(this, myArgs);
-            //                timer.Dispose();
-            //            }
-            //        }
-            //    }));
-            //timer.Change(1000, 1000000000);
-
-
-            //bool loopCheck = true;
-            //while (loopCheck)
-            //{
-            //    if (cancellationTokenSource.IsCancellationRequested)
-            //    {
-            //        NewMethod(item);
-            //        loopCheck = false;
-            //    }
-            //    //Task.Delay(1000);
-            //}
-
-            //void MyIntervalFunction(object state)
-            //{
-            //    if (cancellationTokenSource.IsCancellationRequested)
-            //    {
-            //        if (base.ContainsKey(item.Key))
-            //        {
-            //            var myArgs = new TimeOutEventArgs<TKey, TValue>(NotifyCollectionChangedAction.Add.ToString(), item);
-            //            OnTimeOut?.Invoke(this, myArgs);
-
-            //        }
-            //    }
-            //}
+            }            
         }
     }
 }

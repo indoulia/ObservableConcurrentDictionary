@@ -2,11 +2,11 @@
 
 namespace ConcurrentDictionary.ObservableDictionary
 {
-    public static class EventsSample<TKey, TValue>
+    public static class EventsSample
     {
-        public static void TimeOut(object sender, TimeOutEventArgs<TKey, TValue> e)
-        {
-                Console.WriteLine(e.Item.Key + "  Fired at " + DateTime.Now.ToString());
-        }
+        //public static void TimeOut(object sender, TimeOutEventArgs e)
+        //{
+        //        Console.WriteLine(e.Item.Key + "  Fired at " + DateTime.Now.ToString());
+        //}
     }
 }
